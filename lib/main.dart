@@ -36,6 +36,7 @@ class SlotMachinePage extends StatefulWidget {
 class _SlotMachinePageState extends State<SlotMachinePage> {
   int _score = 50;
   int _win = 2;
+  int tempScore = 0;
 
   final List<String> _wheelItems = [
     "7",
@@ -59,6 +60,7 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
 
     setState(() {
       _score -= _win;
+      tempScore = 0;
     });
     int wheel1Timer = 1000 + Random().nextInt(1000);
     int wheel2Timer = wheel1Timer + Random().nextInt(1000);
@@ -81,7 +83,6 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
   }
 
   void _updateScore(List<String> results) {
-    int tempScore = 0;
     if (results.length != 3) {
       return;
     }
@@ -155,9 +156,10 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
             children: [
               SizedBox(height: 25),
               Text(
-                'Credits : $_score',
+                'Credits : € $_score',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Colors.white),
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: .spaceEvenly,
                 children: [
@@ -237,6 +239,7 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                   RoundedButton(
                     onPressed: () => (_score - _win) < 0 ? {} : onStart(),
                     title: 'Spin',
+                    color: Color(0x80000000),
                   ),
                   SizedBox(width: 10),
                   RoundedButton(
@@ -245,9 +248,17 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         _score += 50;
                       });
                     },
+                    color: Color(0x80000000),
                     title: 'Buy €',
                   ),
                 ],
+              ),
+              Visibility(
+                visible: tempScore != 0,
+                child: Text(
+                  'Win : € $tempScore',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -260,8 +271,16 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
 class RoundedButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String title;
+  final double? fontSize;
+  final Color color;
 
-  const RoundedButton({super.key, required this.onPressed, required this.title});
+  const RoundedButton({
+    super.key,
+    required this.onPressed,
+    required this.color,
+    required this.title,
+    this.fontSize,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -270,9 +289,12 @@ class RoundedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         shape: CircleBorder(),
         padding: EdgeInsets.all(24),
-        backgroundColor: Color(0x80000000),
+        backgroundColor: color,
       ),
-      child: Text(title, style: TextStyle(fontSize: 22, color: Colors.white)),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: fontSize ?? 22, color: Colors.white),
+      ),
     );
   }
 }
