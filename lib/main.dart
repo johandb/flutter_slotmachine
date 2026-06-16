@@ -165,7 +165,17 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
               Row(
                 mainAxisAlignment: .spaceEvenly,
                 children: [
-                  TextButton(
+                  ElevatedButton(
+                    onPressed: () => {
+                      setState(() {
+                        _win = 2;
+                      }),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 2',
                       style: TextStyle(
@@ -173,13 +183,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 2 ? Colors.yellow : Colors.white,
                       ),
                     ),
+                  ),
+                  ElevatedButton(
                     onPressed: () => {
                       setState(() {
-                        _win = 2;
+                        _win = 5;
                       }),
                     },
-                  ),
-                  TextButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 5',
                       style: TextStyle(
@@ -187,13 +202,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 5 ? Colors.yellow : Colors.white,
                       ),
                     ),
+                  ),
+                  ElevatedButton(
                     onPressed: () => {
                       setState(() {
-                        _win = 5;
+                        _win = 10;
                       }),
                     },
-                  ),
-                  TextButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 10',
                       style: TextStyle(
@@ -201,11 +221,6 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 10 ? Colors.yellow : Colors.white,
                       ),
                     ),
-                    onPressed: () => {
-                      setState(() {
-                        _win = 10;
-                      }),
-                    },
                   ),
                 ],
               ),
@@ -222,17 +237,32 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                 },
               ),
               SizedBox(height: 25),
-              TextButton(
-                child: Text('Spin Wheel', style: TextStyle(fontSize: 22, color: Colors.white)),
-                onPressed: () => (_score - _win) < 0 ? {} : onStart(),
-              ),
-              TextButton(
-                child: Text('Buy Credit', style: TextStyle(fontSize: 22, color: Colors.white)),
-                onPressed: () {
-                  setState(() {
-                    _score += 50;
-                  });
-                },
+              Row(
+                mainAxisAlignment: .center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => (_score - _win) < 0 ? {} : onStart(),
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
+                      backgroundColor: Color(0x80000000),
+                    ),
+                    child: Text('Spin', style: TextStyle(fontSize: 22, color: Colors.white)),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _score += 50;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(24),
+                      backgroundColor: Color(0x80000000),
+                    ),
+                    child: Text('Buy €', style: TextStyle(fontSize: 22, color: Colors.white)),
+                  ),
+                ],
               ),
             ],
           ),
