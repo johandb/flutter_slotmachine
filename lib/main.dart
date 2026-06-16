@@ -40,12 +40,12 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
   final List<String> _wheelItems = [
     "7",
     "bar",
+    "bell",
     "cherries",
-    "orange",
     "diamond",
     "grape",
     "melon",
-    "bell",
+    "orange",
   ];
 
   late SlotMachineController _controller;
