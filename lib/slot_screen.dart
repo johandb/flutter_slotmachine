@@ -42,15 +42,12 @@ class _SlotMachineScreenState extends State<SlotMachineScreen> {
   }
 
   void _start() {
-    print("SlotMachine start ...");
     _results = ["", "", ""];
     _stoppedWheels = 0;
     _wheelControllers.forEach((key, _) => _wheelControllers[key]!.start());
   }
 
   void _stop({required int wheelId}) {
-    print("SlotMachine stop $wheelId ...");
-
     final wc = _wheelControllers[wheelId];
     if (wc == null) {
       return;
@@ -60,9 +57,7 @@ class _SlotMachineScreenState extends State<SlotMachineScreen> {
   }
 
   void _onResult({required int wheelId, required String name}) {
-    print("_onResult for $wheelId: $name");
     _results[wheelId] = name;
-    print("stoppedWheels: $_stoppedWheels, results:$_results");
     if (_stoppedWheels == 2) {
       Future.delayed(const Duration(milliseconds: 500), () {
         widget.onFinished(_results);
@@ -172,7 +167,6 @@ class _WheelState extends State<Wheel> {
   }
 
   void _start() {
-    print("Wheel started ${widget.wheelId}");
     counter = 7;
     timer = Timer.periodic(Duration(milliseconds: 100), (timer) {
       _scrollController.animateToItem(
@@ -195,7 +189,6 @@ class _WheelState extends State<Wheel> {
     final delta = (_items.length - mod) + (_items.length - selectedItem) - 1;
     result = selectedItem.abs() % 8;
     final name = _items[result].name;
-    print("stop wheel $wheelId, result:$result,  name:$name");
     _scrollController.animateToItem(
       counter - delta,
       duration: const Duration(milliseconds: 750),

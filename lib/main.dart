@@ -55,8 +55,6 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
     late Timer timer2;
     late Timer timer3;
 
-    print("onStart ...");
-
     SoundService.instance.playSound("spin.mp3");
 
     setState(() {
@@ -66,22 +64,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
     int wheel2Timer = wheel1Timer + Random().nextInt(1000);
     int wheel3Timer = wheel2Timer + Random().nextInt(1000);
     _controller.start();
-    print("run 1 for $wheel1Timer");
     timer1 = Timer(Duration(milliseconds: wheel1Timer), () {
       _stopWheel(timer1, 0);
     });
-    print("run 2 for $wheel2Timer");
     timer2 = Timer(Duration(milliseconds: wheel2Timer), () {
       _stopWheel(timer2, 1);
     });
-    print("run 3 for $wheel3Timer");
     timer3 = Timer(Duration(milliseconds: wheel3Timer), () {
       _stopWheel(timer3, 2);
     });
   }
 
   void _stopWheel(Timer timer, int wheelId) {
-    print("stopWheel $wheelId");
     _controller.stop(wheelId: wheelId);
     timer.cancel();
   }
@@ -95,14 +89,16 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
       tempScore = 2;
     }
     if (results[0] == results[1]) {
-      if (results[0] == 'cherries') {
+      if (results[0] == 'cherries' || results[0] == 'orange') {
         tempScore = 4;
-      } else if (results[0] == 'diamond') {
+      } else if (results[0] == 'diamond' || results[0] == 'melon') {
         tempScore = 6;
       } else if (results[0] == 'bell') {
         tempScore = 8;
+      } else if (results[0] == 'grape') {
+        tempScore = 10;
       } else if (results[0] == '7') {
-        tempScore = 12;
+        tempScore = 14;
       }
     }
     if (results[0] == results[1] && results[0] == results[2]) {
@@ -110,12 +106,12 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
         tempScore = 8;
       } else if (results[0] == 'diamond' || results[0] == 'orange') {
         tempScore = 16;
+      } else if (results[0] == 'melon') {
+        tempScore = 18;
       } else if (results[0] == 'bell') {
         tempScore = 24;
       } else if (results[0] == '7') {
         tempScore = 50;
-      } else if (results[0] == 'melon') {
-        tempScore = 18;
       } else if (results[0] == 'bar') {
         tempScore = 100;
       } else if (results[0] == 'grape' || results[0] == 'citron') {
@@ -228,11 +224,9 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
               SlotMachineScreen(
                 wheelItems: _wheelItems,
                 onCreated: (controller) {
-                  print("onCreated");
                   _controller = controller;
                 },
                 onFinished: (results) {
-                  print('onFinished : Result: $results');
                   _updateScore(results);
                 },
               ),
