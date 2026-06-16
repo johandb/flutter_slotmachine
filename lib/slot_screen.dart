@@ -220,7 +220,7 @@ class _WheelState extends State<Wheel> {
             return SizedBox(
               width: 100,
               height: 100,
-              child: Container(color: Colors.white70, child: item.image),
+              child: Container(color: Color(0xe0ffffff), child: item.image),
             );
           }).toList(),
         ),
