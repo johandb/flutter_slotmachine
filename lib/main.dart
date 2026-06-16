@@ -234,27 +234,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
               Row(
                 mainAxisAlignment: .center,
                 children: [
-                  ElevatedButton(
+                  RoundedButton(
                     onPressed: () => (_score - _win) < 0 ? {} : onStart(),
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: Color(0x80000000),
-                    ),
-                    child: Text('Spin', style: TextStyle(fontSize: 22, color: Colors.white)),
+                    title: 'Spin',
                   ),
-                  ElevatedButton(
+                  SizedBox(width: 10),
+                  RoundedButton(
                     onPressed: () {
                       setState(() {
                         _score += 50;
                       });
                     },
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(24),
-                      backgroundColor: Color(0x80000000),
-                    ),
-                    child: Text('Buy €', style: TextStyle(fontSize: 22, color: Colors.white)),
+                    title: 'Buy €',
                   ),
                 ],
               ),
@@ -262,6 +253,26 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class RoundedButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String title;
+
+  const RoundedButton({super.key, required this.onPressed, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        padding: EdgeInsets.all(24),
+        backgroundColor: Color(0x80000000),
+      ),
+      child: Text(title, style: TextStyle(fontSize: 22, color: Colors.white)),
     );
   }
 }
