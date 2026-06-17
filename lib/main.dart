@@ -36,6 +36,7 @@ class SlotMachinePage extends StatefulWidget {
 class _SlotMachinePageState extends State<SlotMachinePage> {
   int _score = 50;
   int _win = 2;
+  int tempScore = 0;
 
   final List<String> _wheelItems = [
     "7",
@@ -55,39 +56,33 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
     late Timer timer2;
     late Timer timer3;
 
-    print("onStart ...");
-
     SoundService.instance.playSound("spin.mp3");
 
     setState(() {
       _score -= _win;
+      tempScore = 0;
     });
     int wheel1Timer = 1000 + Random().nextInt(1000);
     int wheel2Timer = wheel1Timer + Random().nextInt(1000);
     int wheel3Timer = wheel2Timer + Random().nextInt(1000);
     _controller.start();
-    print("run 1 for $wheel1Timer");
     timer1 = Timer(Duration(milliseconds: wheel1Timer), () {
       _stopWheel(timer1, 0);
     });
-    print("run 2 for $wheel2Timer");
     timer2 = Timer(Duration(milliseconds: wheel2Timer), () {
       _stopWheel(timer2, 1);
     });
-    print("run 3 for $wheel3Timer");
     timer3 = Timer(Duration(milliseconds: wheel3Timer), () {
       _stopWheel(timer3, 2);
     });
   }
 
   void _stopWheel(Timer timer, int wheelId) {
-    print("stopWheel $wheelId");
     _controller.stop(wheelId: wheelId);
     timer.cancel();
   }
 
   void _updateScore(List<String> results) {
-    int tempScore = 0;
     if (results.length != 3) {
       return;
     }
@@ -95,14 +90,16 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
       tempScore = 2;
     }
     if (results[0] == results[1]) {
-      if (results[0] == 'cherries') {
+      if (results[0] == 'cherries' || results[0] == 'orange') {
         tempScore = 4;
-      } else if (results[0] == 'diamond') {
+      } else if (results[0] == 'diamond' || results[0] == 'melon') {
         tempScore = 6;
       } else if (results[0] == 'bell') {
         tempScore = 8;
+      } else if (results[0] == 'grape') {
+        tempScore = 10;
       } else if (results[0] == '7') {
-        tempScore = 12;
+        tempScore = 14;
       }
     }
     if (results[0] == results[1] && results[0] == results[2]) {
@@ -110,12 +107,12 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
         tempScore = 8;
       } else if (results[0] == 'diamond' || results[0] == 'orange') {
         tempScore = 16;
+      } else if (results[0] == 'melon') {
+        tempScore = 18;
       } else if (results[0] == 'bell') {
         tempScore = 24;
       } else if (results[0] == '7') {
         tempScore = 50;
-      } else if (results[0] == 'melon') {
-        tempScore = 18;
       } else if (results[0] == 'bar') {
         tempScore = 100;
       } else if (results[0] == 'grape' || results[0] == 'citron') {
@@ -126,7 +123,8 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
       SoundService.instance.playSound("win.mp3");
       print("win ${(tempScore * (_win / 2)).toInt()}");
       setState(() {
-        _score += (tempScore * (_win / 2)).toInt();
+        tempScore = tempScore * (_win / 2).toInt();
+        _score += tempScore;
       });
     }
   }
@@ -159,13 +157,24 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
             children: [
               SizedBox(height: 25),
               Text(
-                'Credits : $_score',
+                'Credits : € $_score',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32, color: Colors.white),
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: .spaceEvenly,
                 children: [
-                  TextButton(
+                  ElevatedButton(
+                    onPressed: () => {
+                      setState(() {
+                        _win = 2;
+                      }),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 2',
                       style: TextStyle(
@@ -173,13 +182,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 2 ? Colors.yellow : Colors.white,
                       ),
                     ),
+                  ),
+                  ElevatedButton(
                     onPressed: () => {
                       setState(() {
-                        _win = 2;
+                        _win = 5;
                       }),
                     },
-                  ),
-                  TextButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 5',
                       style: TextStyle(
@@ -187,13 +201,18 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 5 ? Colors.yellow : Colors.white,
                       ),
                     ),
+                  ),
+                  ElevatedButton(
                     onPressed: () => {
                       setState(() {
-                        _win = 5;
+                        _win = 10;
                       }),
                     },
-                  ),
-                  TextButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      padding: EdgeInsets.all(12),
+                      backgroundColor: Color(0x80000000),
+                    ),
                     child: Text(
                       '€ 10',
                       style: TextStyle(
@@ -201,11 +220,6 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
                         color: _win == 10 ? Colors.yellow : Colors.white,
                       ),
                     ),
-                    onPressed: () => {
-                      setState(() {
-                        _win = 10;
-                      }),
-                    },
                   ),
                 ],
               ),
@@ -213,30 +227,74 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
               SlotMachineScreen(
                 wheelItems: _wheelItems,
                 onCreated: (controller) {
-                  print("onCreated");
                   _controller = controller;
                 },
                 onFinished: (results) {
-                  print('onFinished : Result: $results');
                   _updateScore(results);
                 },
               ),
               SizedBox(height: 25),
-              TextButton(
-                child: Text('Spin Wheel', style: TextStyle(fontSize: 22, color: Colors.white)),
-                onPressed: () => (_score - _win) < 0 ? {} : onStart(),
+              Row(
+                mainAxisAlignment: .center,
+                children: [
+                  RoundedButton(
+                    onPressed: () => (_score - _win) < 0 ? {} : onStart(),
+                    title: 'Spin',
+                    color: Color(0x80000000),
+                  ),
+                  SizedBox(width: 10),
+                  RoundedButton(
+                    onPressed: () {
+                      setState(() {
+                        _score += 50;
+                      });
+                    },
+                    color: Color(0x80000000),
+                    title: 'Buy €',
+                  ),
+                ],
               ),
-              TextButton(
-                child: Text('Buy Credit', style: TextStyle(fontSize: 22, color: Colors.white)),
-                onPressed: () {
-                  setState(() {
-                    _score += 50;
-                  });
-                },
+              Visibility(
+                visible: tempScore != 0,
+                child: Text(
+                  'Win : € $tempScore',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.white),
+                ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class RoundedButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String title;
+  final double? fontSize;
+  final Color color;
+
+  const RoundedButton({
+    super.key,
+    required this.onPressed,
+    required this.color,
+    required this.title,
+    this.fontSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        padding: EdgeInsets.all(24),
+        backgroundColor: color,
+      ),
+      child: Text(
+        title,
+        style: TextStyle(fontSize: fontSize ?? 22, color: Colors.white),
       ),
     );
   }
