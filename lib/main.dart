@@ -123,7 +123,8 @@ class _SlotMachinePageState extends State<SlotMachinePage> {
       SoundService.instance.playSound("win.mp3");
       print("win ${(tempScore * (_win / 2)).toInt()}");
       setState(() {
-        _score += (tempScore * (_win / 2)).toInt();
+        tempScore = tempScore * (_win / 2).toInt();
+        _score += tempScore;
       });
     }
   }
